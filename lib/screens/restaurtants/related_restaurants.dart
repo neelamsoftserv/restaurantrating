@@ -37,22 +37,20 @@ class _RelatedRestaurantsState extends State<RelatedRestaurants> {
   }
 
 
-  getRelatedRest(){
-    for(int i =0; i<restaurantBloc.restData.length;i++){
-      var name = restaurantBloc.restData[i].name;
-      print("name $name");
-      print("widget name ${widget.name}");
-      print("Called Case 1 ${restaurantBlocRelated.restData.length}");
-      if(widget.name==name){
-        restaurantBlocRelated.restData.removeAt(i);
-        break;
+  List<RestaurantListResponse> getRelatedRest(){
+    List<RestaurantListResponse> restData = [];
+    for(var item in restaurantBloc.restData){
+      if(widget.name.toLowerCase()==item.name.toString().toLowerCase()){
+
+      }
+      else {
+        restData.add(item);
       }
 
     }
-
     print("Called Case 2 ${restaurantBlocRelated.restData.length}");
 
-
+    return restData;
   }
 
 
@@ -70,19 +68,20 @@ class _RelatedRestaurantsState extends State<RelatedRestaurants> {
                   return _buildLoading();
                 }
                 else if(state is RestaurantLoaded){
+                  List<RestaurantListResponse> restData = [];
                   //print("length${restaurantBlocRelated.restData.length}");
                   if(restaurantBlocRelated.restData.isNotEmpty){
                     print("Called Case 1 ${restaurantBlocRelated.restData.length}");
-                    getRelatedRest();
+                     restData = getRelatedRest();
                   }else{
                     print("Called Case ===> ${restaurantBlocRelated.restData.length}");
                   }
                   return ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: restaurantBlocRelated.restData.length,
+                      itemCount: restData.length,
                       shrinkWrap: true,
                       itemBuilder: (BuildContext context, index){
-                        var item = restaurantBlocRelated.restData[index];
+                        var item = restData[index];
                         return Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Stack(

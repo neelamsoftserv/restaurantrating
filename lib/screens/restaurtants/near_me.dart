@@ -24,20 +24,20 @@ class _NearMeRestaurantState extends State<NearMeRestaurant> {
   final RestaurantBloc restaurantBloc = RestaurantBloc();
   final GeoLocationBloc geoLocationBloc = GeoLocationBloc(geoLocationRepository: GeoLocationRepository());
 
-  StreamSubscription<Position>? positionSubscription;
+StreamSubscription<Position>? positionSubscription;
 
 
   @override
   void initState() {
     restaurantBloc.add(GetRestaurantList());
+    geoLocationBloc.add(LoadGeoLocation());
+    Future.delayed(const Duration(seconds: 5),(){
       positionSubscription = Geolocator.getPositionStream().listen((position) {
-        restaurantBloc.add(GetRestaurantList());
         geoLocationBloc.add(UpdateGeoLocation(position: position));
       });
-
+    });
     super.initState();
   }
-  LocationSettings? locationSettings;
 
   @override
   dispose() {
@@ -45,74 +45,82 @@ class _NearMeRestaurantState extends State<NearMeRestaurant> {
      super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return  SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: [
-         Expanded(
-           child: BlocProvider(
-          create: (_) => restaurantBloc,
-         child: BlocListener<RestaurantBloc,RestaurantState>(
-           listener: (context, state){
+          Expanded(
+              child: BlocProvider(
+                create: (_) => restaurantBloc,
+                child: BlocListener<RestaurantBloc,RestaurantState>(
+                  listener: (context, state){
 
-           },
-           child: BlocBuilder<RestaurantBloc,RestaurantState>(
-             builder: (context, state){
-               if(state is RestaurantInitial){
-                 return _buildLoading();
-               }
-               else if(state is RestaurantLoaded){
+                  },
+                  child: BlocBuilder<RestaurantBloc,RestaurantState>(
+                      builder: (context, state){
+                        if(state is RestaurantInitial){
+                          debugPrint("state$state");
+                          return _buildLoading();
+                        }
+                        else if(state is RestaurantLoaded){
+                          debugPrint("state$state");
 
-                 return BlocBuilder<GeoLocationBloc,GeolocationState>(
-                   builder: (context,stategeo) {
-                     if(stategeo is GeolocationLoading){
-                       print(stategeo);
-                       return _buildLoading();
-                     }
-                     else if(stategeo is GeoLocationLoaded){
-                       if(widget.itemIndex == 0){
-                         restaurantBloc.restData = sortRestroList(restaurantBloc.restData,stategeo.position.longitude,stategeo.position.latitude);
-                       }
-                       else if(widget.itemIndex == 1){
-                         restaurantBloc.restData = sortListAccordingRating(restaurantBloc.restData);
-                       }
-                       return ListView.builder(
-                           scrollDirection: Axis.horizontal,
-                           itemCount: restaurantBloc.restData.length,
-                           shrinkWrap: true,
-                           itemBuilder: (BuildContext context, index){
-                             var item = restaurantBloc.restData[index];
-                             return RestaurantItem(
-                                 item:item
-                             );
-                           });
-                     }
-                     else if (stategeo is GeolocationError){
-                        print("error $stategeo");
-                        return Container();
-                     }
-                     else {
-                       return Container();
-                     }
-                   }
-                 );
-               }
-               else{
-                 return Container();
-               }
-         }
-         ),
-         ),
-      )
-         ),
-         InkWell(
-           onTap: (){},
-           child: Text(LabelConstants.seeMore,style: Widgets.common15px400Blue(),),
-         )
-      ],),
+                          return BlocProvider(
+                            create: (_) => geoLocationBloc,
+                            child: BlocBuilder<GeoLocationBloc,GeolocationState>(
+                                builder: (context,stategeo) {
+                                  if(stategeo is GeolocationLoading){
+                                    debugPrint("state$stategeo");
+                                    return _buildLoading();
+                                  }
+                                  else if(stategeo is GeoLocationLoaded){
+                                    List<RestaurantListResponse> restData = [];
+                                    debugPrint("state$stategeo");
+                                    if(widget.itemIndex == 0){
+                                      restData = sortRestroList(restaurantBloc.restData,stategeo.position.longitude,stategeo.position.latitude);
+                                    }
+                                    else if(widget.itemIndex == 1){
+                                      restData = sortListAccordingRating(restaurantBloc.restData);
+                                    }
+                                    return ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: restData.length,
+                                        shrinkWrap: true,
+                                        itemBuilder: (BuildContext context, index){
+                                          var item = restData[index];
+                                          return RestaurantItem(
+                                              item:item
+                                          );
+                                        });
+                                  }
+                                  else if (stategeo is GeolocationError){
+                                    print("error $stategeo");
+                                    return Container();
+                                  }
+                                  else {
+                                    return Container();
+                                  }
+                                }
+                            ),
+                          );
+                        }
+                        else{
+                          return Container();
+                        }
+                      }
+                  ),
+                ),
+              )
+          ),
+          InkWell(
+            onTap: (){},
+            child: Text(LabelConstants.seeMore,style: Widgets.common15px400Blue(),),
+          )
+        ],),
     );
   }
 
@@ -154,7 +162,16 @@ class _NearMeRestaurantState extends State<NearMeRestaurant> {
   }) {
     var distance = Geolocator.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude);
 
+    debugPrint('startLatitude $startLatitude');
+    debugPrint('startLongitude $startLongitude');
+    debugPrint('endLatitude $endLatitude');
+    debugPrint('endLongitude $endLongitude');
+
+
+
+
     var distanceInKM = distance/1000;
+    debugPrint('distanceInKM $distanceInKM');
 
     if(distanceInKM<1){
 

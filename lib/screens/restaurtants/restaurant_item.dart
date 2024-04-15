@@ -61,7 +61,9 @@ class _RestaurantItemState extends State<RestaurantItem> {
                             fontWeight: FontWeight.w600,
                             color: Colors.black,
                             overflow: TextOverflow.ellipsis
-                        ),textAlign: TextAlign.center,maxLines: 3,)),
+                        ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,)),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 0.0),

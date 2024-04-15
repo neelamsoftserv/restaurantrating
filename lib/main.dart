@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -24,9 +23,8 @@ class MyApp extends StatelessWidget {
         ],
         child: MultiBlocProvider(
           providers: [
-            BlocProvider(create: (context)=> GeoLocationBloc(geoLocationRepository: context.read<GeoLocationRepository>())..add(
-              LoadGeoLocation()
-            )
+            BlocProvider(
+                create: (context)=> GeoLocationBloc(geoLocationRepository: context.read<GeoLocationRepository>())..add(LoadGeoLocation())
             )
           ],
           child: MaterialApp(

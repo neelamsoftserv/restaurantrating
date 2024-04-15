@@ -16,21 +16,20 @@ class HomePage extends  StatefulWidget  {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static const List<Widget> _widgetOptions = <Widget>[
     Home(),
     Text(
-      'Index 1: Business',
+      'Index 1: Page',
       style: optionStyle,
     ),
     Text(
-      'Index 2: School',
+      'Index 2: Page',
       style: optionStyle,
     ),
     Text(
-      'Index 3: School',
+      'Index 3: Page',
       style: optionStyle,
     ),
   ];
@@ -41,13 +40,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _streamSubscription = Geolocator.getServiceStatusStream().listen(
             (ServiceStatus status) {
-          print(status);
+           print(status);
           if(status == ServiceStatus.disabled){
             Location().requestService();
           }
-          else if(status == ServiceStatus.disabled){
-            Location().requestService();
-          }
+
         });
     super.initState();
   }
@@ -69,22 +66,18 @@ class _HomePageState extends State<HomePage> {
           bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
                BottomNavigationBarItem(
-                // icon: Image.asset(ImageConstants.home,width: 24,height: 24,),
                 icon: Icon(Icons.home,size: 30),
                 label: '',
               ),
               BottomNavigationBarItem(
-                // icon: Image.asset(ImageConstants.heart,width: 24,height: 24,),
                 icon: Icon(CupertinoIcons.heart,size: 30),
                 label: '',
               ),
               BottomNavigationBarItem(
-                // icon: Image.asset(ImageConstants.user,width: 24,height: 24,),
                 icon:Icon(CupertinoIcons.person,size: 30),
                 label: '',
               ),
               BottomNavigationBarItem(
-                // icon: Image.asset(ImageConstants.history,width: 24,height: 24,),
                 icon:Icon(Icons.history,size:30),
                 label: '',
               ),
@@ -92,7 +85,6 @@ class _HomePageState extends State<HomePage> {
             currentIndex: _selectedIndex,
             selectedItemColor: ColorConstants.blueColor,
             unselectedItemColor: ColorConstants.unSelectedBottomIconColor,
-      
             onTap: _onItemTapped,
           )),
     );

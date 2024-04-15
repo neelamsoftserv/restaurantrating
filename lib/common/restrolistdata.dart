@@ -836,8 +836,8 @@ class RestroData {
             "phone": "999-555-0128",
             "email": "candccateringservice@example.com",
             "location": [
-                52.5045788,
-                13.3778519
+                52.5045667,
+                13.4478541
             ]
         },
         "stars": 0,
@@ -1188,38 +1188,38 @@ class RestroData {
             "two": "36",
             "three": "88",
             "four": "90",
-            "five": "45",
+            "five": "45"
+            },
             "reviews": [
                 {
                     "name": "John Doe",
                     "image": "john_doe.jpg",
-                    "rating": 4.5,
+                    "reviewRating": 4.5,
                     "title": "Great product!",
                     "text": "I absolutely love this product. It exceeded my expectations and I would highly recommend it to others."
                 },
                 {
                     "name": "Jane Smith",
                     "image": "jane_smith.jpg",
-                    "rating": 5,
+                    "reviewRating": 5,
                     "title": "Amazing!",
                     "text": "This product is amazing. It's exactly what I needed and I'm extremely satisfied with my purchase."
                 },
                 {
                     "name": "Michael Johnson",
                     "image": "michael_johnson.jpg",
-                    "rating": 4,
+                    "reviewRating": 4,
                     "title": "Good value for money",
                     "text": "I found this product to be a good value for the price. It's well-made and functions exactly as described."
                 },
                 {
                     "name": "Emily Brown",
                     "image": "emily_brown.jpg",
-                    "rating": 3.5,
+                    "reviewRating": 3.5,
                     "title": "Decent product",
                     "text": "Overall, this product is decent. It works fine but there are a few minor issues that could be improved."
                 }
             ]
-        }
     },
     {
         "_id": 119,
@@ -1259,14 +1259,14 @@ class RestroData {
             {
                 "name": "Jane Smith",
                 "image": "jane_smith.jpg",
-                "reviewRating": 5,
+                "reviewRating": 5.0,
                 "title": "Amazing!",
                 "text": "This product is amazing. It's exactly what I needed and I'm extremely satisfied with my purchase."
             },
             {
                 "name": "Michael Johnson",
                 "image": "michael_johnson.jpg",
-                "reviewRating": 4,
+                "reviewRating": 4.0,
                 "title": "Good value for money",
                 "text": "I found this product to be a good value for the price. It's well-made and functions exactly as described."
             },

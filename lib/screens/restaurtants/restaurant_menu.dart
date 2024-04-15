@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:restaurantrating/models/restaurant_model.dart';
 
 import '../../common/widgets.dart';
 import '../../constants/color_constants.dart';
@@ -7,10 +8,12 @@ import '../../constants/image_constants.dart';
 import '../../constants/label_constants.dart';
 
 class RestaurantMenu extends StatefulWidget {
-  const RestaurantMenu({super.key});
+  final RestaurantListResponse item;
+  final String distance;
+  const RestaurantMenu({super.key, required this.item,required this.distance,});
 
   @override
-  State<RestaurantMenu> createState() => _RestaurantMenuState();
+  State<RestaurantMenu> createState() => _RestaurantMenuState(item);
 }
 
 List restaurantList = [
@@ -53,6 +56,9 @@ List restaurantList = [
 ];
 
 class _RestaurantMenuState extends State<RestaurantMenu> {
+  final RestaurantListResponse item;
+  _RestaurantMenuState(this.item);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -99,7 +105,7 @@ class _RestaurantMenuState extends State<RestaurantMenu> {
                         crossAxisSpacing: 20,
                         mainAxisSpacing: 14,
                         // startCrossAxisDirectionReversed: true,
-                        pattern: [
+                        pattern: const [
                           StairedGridTile(0.5, 2 / 4),
                           StairedGridTile(0.5, 2 / 4),
                         ],
@@ -175,6 +181,7 @@ class _RestaurantMenuState extends State<RestaurantMenu> {
       child: Column(
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.asset(ImageConstants.restroOne,width: 48,height: 48,),
               Expanded(
@@ -184,15 +191,16 @@ class _RestaurantMenuState extends State<RestaurantMenu> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Fit Fresh Bites",style: Widgets.common18px600(),),
+                          Expanded(child: Text(item.name.toString(),style: Widgets.common18px600(),)),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Image.asset(ImageConstants.location,width:20,height: 20,),
                               const SizedBox(width: 3,),
                               Text(
-                                "0.9 KM",style: Widgets.common15px400(),),
+                               widget.distance,style: Widgets.common15px400(),),
                             ],
                           )
                         ],
@@ -205,13 +213,13 @@ class _RestaurantMenuState extends State<RestaurantMenu> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Image.asset(ImageConstants.star,width:20,height: 20,),
-                              FittedBox(child: Text("4.2",style: Widgets.common16px400(),)),
+                              FittedBox(child: Text(item.stars.toString(),style: Widgets.common16px400(),)),
                             ],
                           ),
                           const SizedBox(width: 10,),
-                          const Expanded(
-                            child: Text("12.7k Reviews",
-                                style: TextStyle(
+                           Expanded(
+                            child: Text("${item.noReviews.toString()} Reviews",
+                                style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
                                     color: Colors.green,

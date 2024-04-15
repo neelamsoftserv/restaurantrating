@@ -16,7 +16,6 @@ class GeoLocationBloc extends Bloc<GeoLocationEvent,GeolocationState>{
    var distance ;
 
 
-
   GeoLocationBloc({ required GeoLocationRepository geoLocationRepository}) :
       _geoLocationRepository = geoLocationRepository,
         super(GeolocationLoading()){
@@ -24,14 +23,8 @@ class GeoLocationBloc extends Bloc<GeoLocationEvent,GeolocationState>{
       position = await _geoLocationRepository.getCurrentLocation();
       if(position!=null){
         debugPrint("position${position?.latitude}");
-
         add(UpdateGeoLocation(position: position!));
-
-
       }
-
-
-
     });
     on<UpdateGeoLocation>(
         (event,emit){

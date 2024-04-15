@@ -43,6 +43,14 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
   void initState() {
    debugPrint("${widget.endLatitude}");
    debugPrint("${widget.endLongitude}");
+   debugPrint("reviews${restaurantItem.reviews?.length}");
+   distance = Widgets().calculateDistance(
+       startLatitude: restaurantItem.contact?.location!=null?
+       restaurantItem.contact!.location![0]:0.0,
+       startLongitude:restaurantItem.contact?.location!=null ?
+       restaurantItem.contact!.location![1]:0.0,
+       endLatitude: widget.endLatitude,
+       endLongitude: widget.endLongitude);
   /* if(widget.endLongitude == 0.0 && widget.endLatitude == 0.0){
     geoLocationBloc.add(LoadGeoLocation());
    }*/
@@ -201,7 +209,10 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
             const SizedBox(height: 10,),
             InkWell(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>const RestaurantMenu()));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> RestaurantMenu(
+                  item: restaurantItem,
+                    distance: distance
+                )));
               },
                 child: Widgets().rowTile(label: LabelConstants.viewMenu)),
             const SizedBox(height: 10,),
@@ -292,6 +303,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
               padding: const EdgeInsets.only(top: 20.0,right: 20.0),
               child: Center(child: Text(LabelConstants.reviews,style: Widgets.common28px700(),)),
             ),
+            restaurantItem.reviews!=null ?
             CarouselSlider.builder(
                 itemCount: restaurantItem.reviews?.length,
                 itemBuilder: (BuildContext context, int index, int realIndex ){
@@ -306,7 +318,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                     _current = index;
                   });
                 })
-               ),
+               ):Container(),
             const SizedBox(height: 10,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -334,7 +346,8 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
             InkWell(
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>RestaurantReview(
-                    restaurantItem : widget.restaurantItem
+                    restaurantItem : widget.restaurantItem,
+
                 )));
               },
               child: Container(

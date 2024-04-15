@@ -6,6 +6,7 @@ import 'package:restaurantrating/constants/color_constants.dart';
 import 'package:restaurantrating/screens/restaurtants/near_me.dart';
 import 'package:restaurantrating/screens/restaurtants/search_restaurant.dart';
 
+import '../apis/services/blocs/restaurant_blocs/restaurant_bloc.dart';
 import '../common/widgets.dart';
 import '../constants/image_constants.dart';
 import '../constants/label_constants.dart';
@@ -26,9 +27,10 @@ class _HomeState extends State<Home> {
   ///search text editing controller
   TextEditingController searchController = TextEditingController();
 
-  List<Widget>tabBarItems = const [
+  List<Widget> tabBarItems = const [
       Tab(
       child: Text(LabelConstants.nearMe, ),
+
     ),
      Tab(
       child: Text(LabelConstants.topRated, ),
@@ -58,6 +60,10 @@ class _HomeState extends State<Home> {
     );
     super.dispose();
   }
+
+  final RestaurantBloc restaurantBloc = RestaurantBloc();
+  final GeoLocationBloc geoLocationBloc = GeoLocationBloc(geoLocationRepository: GeoLocationRepository());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,10 +112,10 @@ class _HomeState extends State<Home> {
                 textInputAction: TextInputAction.done,
                 onTap: (){
                   Navigator.push(context, MaterialPageRoute(builder: (context)=>
-                      SearchRestaurant()
+                      const SearchRestaurant()
                   ));
                 },
-                style: TextStyle(color: Colors.black, fontSize: 16),
+                style: const TextStyle(color: Colors.black, fontSize: 16),
                 decoration: InputDecoration(
                     prefixIcon: GestureDetector(
                       onTap: () {
@@ -156,7 +162,14 @@ class _HomeState extends State<Home> {
                           indicatorPadding: const EdgeInsets.only(left: 8, right: 8),
                           indicatorColor: ColorConstants.blueColor,
                           indicatorWeight: 2,
-                          tabs: tabBarItems
+                          tabs: tabBarItems,
+                        onTap: (value){
+                           /* if(value == 0){
+                              restaurantBloc.add(GetRestaurantList());
+                              geoLocationBloc.add(LoadGeoLocation());
+                            }
+*/
+                        }
                       ),
                     ),
                     Expanded(
