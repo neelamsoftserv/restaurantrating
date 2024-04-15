@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
@@ -5,13 +7,13 @@ import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_blo
 import 'package:restaurantrating/apis/services/blocs/restaurant_blocs/restaurant_bloc.dart';
 import 'package:restaurantrating/apis/services/repositories/geolocation/geolocation_repository.dart';
 import 'package:restaurantrating/common/widgets.dart';
-import 'package:restaurantrating/constants/image_constants.dart';
 import 'package:restaurantrating/constants/label_constants.dart';
 import 'package:restaurantrating/models/restaurant_model.dart';
 import 'package:restaurantrating/screens/restaurtants/restaurant_item.dart';
 
 class NearMeRestaurant extends StatefulWidget {
-  const NearMeRestaurant({super.key});
+  final int itemIndex;
+  const NearMeRestaurant({super.key, required this.itemIndex});
 
   @override
   State<NearMeRestaurant> createState() => _NearMeRestaurantState();
@@ -22,11 +24,25 @@ class _NearMeRestaurantState extends State<NearMeRestaurant> {
   final RestaurantBloc restaurantBloc = RestaurantBloc();
   final GeoLocationBloc geoLocationBloc = GeoLocationBloc(geoLocationRepository: GeoLocationRepository());
 
+  StreamSubscription<Position>? positionSubscription;
+
 
   @override
   void initState() {
     restaurantBloc.add(GetRestaurantList());
+      positionSubscription = Geolocator.getPositionStream().listen((position) {
+        restaurantBloc.add(GetRestaurantList());
+        geoLocationBloc.add(UpdateGeoLocation(position: position));
+      });
+
     super.initState();
+  }
+  LocationSettings? locationSettings;
+
+  @override
+  dispose() {
+    positionSubscription?.cancel();
+     super.dispose();
   }
 
   @override
@@ -49,17 +65,40 @@ class _NearMeRestaurantState extends State<NearMeRestaurant> {
                  return _buildLoading();
                }
                else if(state is RestaurantLoaded){
-                 restaurantBloc.restData = sortRestroList(restaurantBloc.restData);
-                 return ListView.builder(
-                     scrollDirection: Axis.horizontal,
-                     itemCount: restaurantBloc.restData.length,
-                     shrinkWrap: true,
-                     itemBuilder: (BuildContext context, index){
-                       var item = restaurantBloc.restData[index];
-                       return RestaurantItem(
-                        item:item
-                       );
-                     });
+
+                 return BlocBuilder<GeoLocationBloc,GeolocationState>(
+                   builder: (context,stategeo) {
+                     if(stategeo is GeolocationLoading){
+                       print(stategeo);
+                       return _buildLoading();
+                     }
+                     else if(stategeo is GeoLocationLoaded){
+                       if(widget.itemIndex == 0){
+                         restaurantBloc.restData = sortRestroList(restaurantBloc.restData,stategeo.position.longitude,stategeo.position.latitude);
+                       }
+                       else if(widget.itemIndex == 1){
+                         restaurantBloc.restData = sortListAccordingRating(restaurantBloc.restData);
+                       }
+                       return ListView.builder(
+                           scrollDirection: Axis.horizontal,
+                           itemCount: restaurantBloc.restData.length,
+                           shrinkWrap: true,
+                           itemBuilder: (BuildContext context, index){
+                             var item = restaurantBloc.restData[index];
+                             return RestaurantItem(
+                                 item:item
+                             );
+                           });
+                     }
+                     else if (stategeo is GeolocationError){
+                        print("error $stategeo");
+                        return Container();
+                     }
+                     else {
+                       return Container();
+                     }
+                   }
+                 );
                }
                else{
                  return Container();
@@ -79,7 +118,7 @@ class _NearMeRestaurantState extends State<NearMeRestaurant> {
 
   Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 
-  List<RestaurantListResponse> sortRestroList(List<RestaurantListResponse> restData) {
+  List<RestaurantListResponse> sortRestroList(List<RestaurantListResponse> restData, double longitude, double latitude) {
 
     restData.sort((a,b){
       double startLatitudeA = a.contact!.location![0];
@@ -88,8 +127,8 @@ class _NearMeRestaurantState extends State<NearMeRestaurant> {
       var distanceA =  calculateDistance(
           startLatitude: startLatitudeA,
           startLongitude: startLongitudeA,
-          endLatitude: geoLocationBloc.position?.latitude??0.0,
-          endLongitude: geoLocationBloc.position?.longitude??0.0);
+          endLatitude: latitude,
+          endLongitude: longitude);
 
       double startLatitudeB = b.contact!.location![0];
       double startLongitudeB = b.contact!.location![1];
@@ -97,26 +136,10 @@ class _NearMeRestaurantState extends State<NearMeRestaurant> {
       var distanceB =  calculateDistance(
           startLatitude: startLatitudeB,
           startLongitude: startLongitudeB,
-          endLatitude: geoLocationBloc.position?.latitude??0.0,
-          endLongitude: geoLocationBloc.position?.longitude??0.0);
-
-      debugPrint('distanceA$distanceA');
-      debugPrint('distanceB$distanceB');
-
-      // var difference = distanceA-distanceB;
+          endLatitude: latitude,
+          endLongitude: longitude);
 
       return distanceA.compareTo(distanceB);
-
-     /* if(difference <0){
-        return -1;
-      }
-      else if(difference>0){
-        return 1;
-      }
-      else{
-        return 0 ;
-      }*/
-
 
     });
 
@@ -138,9 +161,21 @@ class _NearMeRestaurantState extends State<NearMeRestaurant> {
       return distance.toDouble().round();
     }
     else{
-      debugPrint("distanceInKM${distanceInKM.toDouble().round()}");
+      // debugPrint("distanceInKM${distanceInKM.toDouble().round()}");
       return distanceInKM.toDouble().round();
     }
 
+  }
+
+  List<RestaurantListResponse> sortListAccordingRating(List<RestaurantListResponse> restData) {
+    restData.sort((a,b){
+
+      int starA = a.stars??1;
+      int starB = b.stars??1;
+
+      return starA.compareTo(starB);
+
+    });
+    return restData.reversed.toList();
   }
 }

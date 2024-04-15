@@ -9,6 +9,3 @@ abstract class RestaurantEvent extends Equatable {
 }
 class GetRestaurantList extends RestaurantEvent {}
 
-class CheckLocationPermission extends RestaurantEvent {}
-
-class RequestLocationPermission extends RestaurantEvent {}

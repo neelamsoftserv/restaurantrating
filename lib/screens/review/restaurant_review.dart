@@ -6,6 +6,7 @@ import 'package:restaurantrating/constants/image_constants.dart';
 import 'package:restaurantrating/constants/label_constants.dart';
 import 'package:restaurantrating/models/restaurant_model.dart';
 import 'package:restaurantrating/screens/carousel/carosel_item.dart';
+import 'package:restaurantrating/screens/homepage.dart';
 
 import '../../constants/color_constants.dart';
 
@@ -136,7 +137,36 @@ class _RestaurantReviewState extends State<RestaurantReview> {
            const SizedBox(height: 10,),
            InkWell(
              onTap: (){
-
+               showModalBottomSheet(context: context, builder: (context){
+                 return SizedBox(
+                   height:MediaQuery.of(context).size.height *.20,
+                   child:  Column(
+                     crossAxisAlignment: CrossAxisAlignment.center,
+                     mainAxisAlignment:  MainAxisAlignment.center,
+                     children: [
+                       const Icon(
+                         Icons.check,size: 50,color: Colors.green,
+                       ),
+                       Text("Review Submited",style: Widgets.common28px700(),),
+                       const SizedBox(height: 5,),
+                       InkWell(
+                         onTap: (){
+                           Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+                         },
+                         child: Container(
+                           width: 150,
+                           decoration: BoxDecoration(
+                             color: ColorConstants.blueColor,
+                             borderRadius: BorderRadius.circular(25),
+                           ),
+                             padding: const EdgeInsets.all(10),
+                             alignment: Alignment.center,
+                             child: Text("OK",style: Widgets.common17px700(),)),
+                       )
+                     ],
+                   ),
+                 );
+               });
              },
              child: Container(
                alignment: Alignment.center,

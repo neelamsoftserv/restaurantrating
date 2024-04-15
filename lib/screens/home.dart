@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:restaurantrating/apis/services/blocs/applifecycleobserver/applifecycle_observer.dart';
+import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_bloc.dart';
+import 'package:restaurantrating/apis/services/repositories/geolocation/geolocation_repository.dart';
 import 'package:restaurantrating/constants/color_constants.dart';
 import 'package:restaurantrating/screens/restaurtants/near_me.dart';
 import 'package:restaurantrating/screens/restaurtants/search_restaurant.dart';
@@ -39,6 +42,22 @@ class _HomeState extends State<Home> {
 
   TabController? _tabController;
 
+  @override
+  void initState() {
+    // Registering the observer to listen to app lifecycle changes
+    WidgetsBinding.instance.addObserver(
+      AppLifecycleObserver(appStateBloc: GeoLocationBloc(geoLocationRepository:  GeoLocationRepository()))
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(
+        AppLifecycleObserver(appStateBloc: GeoLocationBloc(geoLocationRepository:  GeoLocationRepository()))
+    );
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -146,10 +165,10 @@ class _HomeState extends State<Home> {
                         width: MediaQuery.of(context).size.width,
                         child: const TabBarView(
                           children: <Widget>[
-                            NearMeRestaurant(),
-                            NearMeRestaurant(),
-                            NearMeRestaurant(),
-                            NearMeRestaurant(),
+                            NearMeRestaurant(itemIndex:0),
+                            NearMeRestaurant(itemIndex:1),
+                            NearMeRestaurant(itemIndex:2),
+                            NearMeRestaurant(itemIndex:3),
                           ],
                         ),
                       ),

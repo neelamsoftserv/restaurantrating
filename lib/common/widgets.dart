@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -246,14 +245,14 @@ class Widgets {
       return "${distance.toDouble().round().toString()}m";
     }
     else{
-      debugPrint('distanceInKM item${distanceInKM.toDouble().round()}');
+      // debugPrint('distanceInKM item${distanceInKM.toDouble().round()}');
       return "${distanceInKM.toDouble().round().toString()}KM";
     }
 
   }
 
   List<RestaurantListResponse> searchValue(String value,restroList) {
-    print("called");
+    // print("called");
     final restData = value.isNotEmpty ? restroList.where((element) =>
     (element.name != null &&
         element.name!.toLowerCase().startsWith(value.toLowerCase())) ||
@@ -266,7 +265,7 @@ class Widgets {
         .toList()
         : restroList;
 
-    print("restData${restData.length}");
+    // print("restData${restData.length}");
 
     return restData;
   }

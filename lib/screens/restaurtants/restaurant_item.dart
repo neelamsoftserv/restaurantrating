@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_bloc.dart';
-import 'package:restaurantrating/apis/services/repositories/geolocation/geolocation_repository.dart';
 import 'package:restaurantrating/common/widgets.dart';
 import 'package:restaurantrating/constants/image_constants.dart';
 import 'package:restaurantrating/models/restaurant_model.dart';
@@ -96,10 +94,11 @@ class _RestaurantItemState extends State<RestaurantItem> {
                                           const SizedBox(width: 5,),
                                           Text(
                                             Widgets().calculateDistance(
-                                              startLatitude: item.contact!.location![0],
-                                              startLongitude: item.contact!.location![1],
-                                              endLatitude: state.position.latitude,
-                                              endLongitude: state.position.longitude
+                                              startLatitude: state.position.latitude,
+                                              startLongitude: state.position.longitude,
+                                              endLatitude: item.contact!.location![0],
+                                              endLongitude: item.contact!.location![1],
+
                                           ),style: Widgets.common22px600(),),
                                         ],
                                       );

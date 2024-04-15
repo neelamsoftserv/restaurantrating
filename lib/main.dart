@@ -1,8 +1,8 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:location/location.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_bloc.dart';
 import 'package:restaurantrating/apis/services/repositories/geolocation/geolocation_repository.dart';
 import 'package:restaurantrating/constants/font_constant.dart';
@@ -10,34 +10,47 @@ import 'package:restaurantrating/screens/homepage.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
-  Location location = Location();
+ /* Location location = Location();
 
   bool _serviceEnabled;
 
   if(await Permission.location.serviceStatus.isEnabled ){
-     var status = await Permission.location.status;
-     if(status.isGranted){
-       print("granted");
-     }
-     else if(status.isDenied){
-       await [
-         Permission.location
-       ].request();
-     }
-     else if(status.isPermanentlyDenied){
-       openAppSettings();
-     }
+    requestPermission();
   }
   else{
-    do{
-      _serviceEnabled = await location.requestService();
-      print(_serviceEnabled);
+    _serviceEnabled = await location.requestService();
+
+    if(_serviceEnabled){
+      requestPermission();
     }
-    while(!_serviceEnabled);
-
-  }
-
+    else{
+      do{
+        _serviceEnabled = await location.requestService();
+        print(_serviceEnabled);
+      }
+      while(!_serviceEnabled);
+      if(_serviceEnabled){
+        requestPermission();
+      }
+    }
+  }*/
 }
+
+/*Future<void> requestPermission() async {
+
+  var status = await Permission.location.status;
+  if(status.isGranted){
+    print("granted");
+  }
+  else if(status.isDenied){
+    await [
+    Permission.location
+    ].request();
+  }
+  else if(status.isPermanentlyDenied){
+    openAppSettings();
+  }
+}*/
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -73,3 +86,5 @@ class MyApp extends StatelessWidget {
 
   }
 }
+
+

@@ -3,16 +3,11 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
-import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_bloc.dart';
-import 'package:restaurantrating/apis/services/blocs/restaurant_blocs/restaurant_bloc.dart';
-import 'package:restaurantrating/common/widgets.dart';
 import 'package:restaurantrating/constants/color_constants.dart';
-import 'package:restaurantrating/constants/image_constants.dart';
-import 'package:restaurantrating/constants/label_constants.dart';
 import 'package:restaurantrating/screens/home.dart';
 import 'package:geolocator/geolocator.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends  StatefulWidget  {
   const HomePage({super.key});
 
   @override
@@ -48,6 +43,9 @@ class _HomePageState extends State<HomePage> {
             (ServiceStatus status) {
           print(status);
           if(status == ServiceStatus.disabled){
+            Location().requestService();
+          }
+          else if(status == ServiceStatus.disabled){
             Location().requestService();
           }
         });

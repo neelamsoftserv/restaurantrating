@@ -9,7 +9,6 @@ import 'package:restaurantrating/constants/image_constants.dart';
 import 'package:restaurantrating/constants/label_constants.dart';
 import 'package:restaurantrating/models/restaurant_model.dart';
 import 'package:restaurantrating/screens/carousel/carosel_item.dart';
-import 'package:restaurantrating/screens/carousel/carousel_review.dart';
 import 'package:restaurantrating/screens/restaurtants/related_restaurants.dart';
 import 'package:restaurantrating/screens/restaurtants/restaurant_menu.dart';
 import 'package:restaurantrating/screens/review/restaurant_review.dart';
@@ -44,9 +43,9 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
   void initState() {
    debugPrint("${widget.endLatitude}");
    debugPrint("${widget.endLongitude}");
-   if(widget.endLongitude == 0.0 && widget.endLatitude == 0.0){
+  /* if(widget.endLongitude == 0.0 && widget.endLatitude == 0.0){
     geoLocationBloc.add(LoadGeoLocation());
-   }
+   }*/
 
     super.initState();
   }
