@@ -11,7 +11,6 @@ class GeoLocationRepository extends BaseGeoLocationRepository{
 Future<Position?> getCurrentLocation() async {
 
   bool serviceEnabled = false;
-  // bool isGranted = false;
 
   return requestPermission().then((value) async {
     print('allowed$serviceEnabled}');

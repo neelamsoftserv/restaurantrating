@@ -10,52 +10,11 @@ import 'package:restaurantrating/screens/homepage.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
- /* Location location = Location();
-
-  bool _serviceEnabled;
-
-  if(await Permission.location.serviceStatus.isEnabled ){
-    requestPermission();
-  }
-  else{
-    _serviceEnabled = await location.requestService();
-
-    if(_serviceEnabled){
-      requestPermission();
-    }
-    else{
-      do{
-        _serviceEnabled = await location.requestService();
-        print(_serviceEnabled);
-      }
-      while(!_serviceEnabled);
-      if(_serviceEnabled){
-        requestPermission();
-      }
-    }
-  }*/
 }
-
-/*Future<void> requestPermission() async {
-
-  var status = await Permission.location.status;
-  if(status.isGranted){
-    print("granted");
-  }
-  else if(status.isDenied){
-    await [
-    Permission.location
-    ].request();
-  }
-  else if(status.isPermanentlyDenied){
-    openAppSettings();
-  }
-}*/
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
