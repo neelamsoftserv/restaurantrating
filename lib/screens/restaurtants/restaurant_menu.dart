@@ -172,28 +172,34 @@ class _RestaurantMenuState extends State<RestaurantMenu> {
   }
 
   Widget topWidget() {
+    /// Container styling
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
       ),
       padding: const EdgeInsets.all(10),
+      /// Content of the container
       child: Column(
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// Image of the restaurant
               Image.asset(ImageConstants.restroOne,width: 48,height: 48,),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                  /// Column for restaurant name, rating, and reviews
                   child: Column(
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          ///name
                           Expanded(child: Text(item.name.toString(),style: Widgets.common18px600(),)),
+                          /// Row for location icon and distance
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -217,7 +223,8 @@ class _RestaurantMenuState extends State<RestaurantMenu> {
                             ],
                           ),
                           const SizedBox(width: 10,),
-                           Expanded(
+                          /// Row for restaurant rating and reviews count
+                          Expanded(
                             child: Text("${item.noReviews.toString()} Reviews",
                                 style: const TextStyle(
                                     fontSize: 16,
