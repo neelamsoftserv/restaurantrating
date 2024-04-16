@@ -1,6 +1,6 @@
+///impor libararies
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:restaurantrating/apis/services/blocs/applifecycleobserver/applifecycle_observer.dart';
 import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_bloc.dart';
 import 'package:restaurantrating/apis/services/repositories/geolocation/geolocation_repository.dart';
 import 'package:restaurantrating/constants/color_constants.dart';
@@ -28,6 +28,7 @@ class _HomeState extends State<Home>{
   ///search text editing controller
   TextEditingController searchController = TextEditingController();
 
+  /// List of tab bar items
   List<Widget> tabBarItems = const [
       Tab(
       child: Text(LabelConstants.nearMe, ),
@@ -43,16 +44,20 @@ class _HomeState extends State<Home>{
       child: Text(LabelConstants.newRes, ),),
   ];
 
+  /// Tab controller for the tab bar
   TabController? _tabController;
 
 
+  /// Restaurant BLoC
   final RestaurantBloc restaurantBloc = RestaurantBloc();
+  /// GeoLocation BLoC
   final GeoLocationBloc geoLocationBloc = GeoLocationBloc(geoLocationRepository: GeoLocationRepository());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorConstants.backgroundColor,
+      ///app bar
       appBar: PreferredSize(
         preferredSize: Size(
             MediaQuery.of(context).size.width,
@@ -129,12 +134,14 @@ class _HomeState extends State<Home>{
                         borderRadius: BorderRadius.circular(25.0))),
               ),
             ),
+            ///tab bar UI
             Expanded(
               child: DefaultTabController(
                 initialIndex: 0,
                 length: 4,
                 child: Column(
                   children: [
+                    ///tab bar
                     SizedBox(
                       height:40,
                       width: MediaQuery.of(context).size.width,
@@ -150,12 +157,14 @@ class _HomeState extends State<Home>{
                           tabs: tabBarItems,
                       ),
                     ),
+                    ///tab bar view
                     Expanded(
                       child: SizedBox(
                         height: MediaQuery.of(context).size.height,
                         width: MediaQuery.of(context).size.width,
                         child: const TabBarView(
                           children: <Widget>[
+                            ///tab bar view pages
                             NearMeRestaurant(itemIndex:0),
                             NearMeRestaurant(itemIndex:1),
                             NearMeRestaurant(itemIndex:2),

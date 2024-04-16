@@ -15,6 +15,7 @@ import 'package:restaurantrating/screens/review/restaurant_review.dart';
 
 import '../../constants/color_constants.dart';
 
+///It takes in the restaurantItem, endLatitude, and endLongitude as parameters.
 class RestaurantDetail extends StatefulWidget {
  final RestaurantListResponse restaurantItem;
  final double endLatitude;
@@ -27,14 +28,24 @@ class RestaurantDetail extends StatefulWidget {
   State<RestaurantDetail> createState() => _RestaurantDetailState(restaurantItem);
 }
 class _RestaurantDetailState extends State<RestaurantDetail> {
+
+  /// Current index of the carousel
   int _current = 0;
+
+  /// Controller for the carousel
   final CarouselController _controller = CarouselController();
   List<String> imgList = ["","","","",""];
 
+  /// Flag to track if description is tapped
   bool isDescriptionTapped = false;
+  /// Flag to track if location is tapped
   bool isLocationTapped = false;
+
+  /// Restaurant details
   final RestaurantListResponse restaurantItem;
   _RestaurantDetailState(this.restaurantItem);
+
+  /// Distance between restaurant and user's location
   String distance = "";
 
   GeoLocationBloc geoLocationBloc = GeoLocationBloc(geoLocationRepository: GeoLocationRepository());
@@ -44,6 +55,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
    debugPrint("${widget.endLatitude}");
    debugPrint("${widget.endLongitude}");
    debugPrint("reviews${restaurantItem.reviews?.length}");
+   /// Calculate distance between restaurant and user's location
    distance = Widgets().calculateDistance(
        startLatitude: restaurantItem.contact?.location!=null?
        restaurantItem.contact!.location![0]:0.0,
@@ -63,6 +75,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorConstants.backgroundColor,
+        ///app bar
         appBar: PreferredSize(
           preferredSize: Size(
               MediaQuery.of(context).size.width,
@@ -96,6 +109,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
           padding: const EdgeInsets.all(20),
           children: [
             const SizedBox(height: 20),
+            /// CarouselSlider to display restaurant detail
             CarouselSlider(
               carouselController: _controller,
               items: [
@@ -121,6 +135,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                     });
                   })),
             const SizedBox(height: 10,),
+            /// Dots indicator for carousel
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: imgList.asMap().entries.map((entry) {
@@ -141,6 +156,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
             const SizedBox(height: 20),
             Center(child: Text(LabelConstants.about,style: Widgets.common28px700(),)),
             const SizedBox(height: 20),
+            /// Displaying restaurant description
             isDescriptionTapped?
             InkWell(
                 onTap: (){
@@ -169,6 +185,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
               },
                 child: Widgets().rowTile(label: LabelConstants.description)),
             const SizedBox(height: 10,),
+            /// Displaying restaurant location
             isLocationTapped?
             InkWell(
                 onTap: (){
@@ -207,6 +224,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                 },
                 child: Widgets().rowTile(label: LabelConstants.location)),
             const SizedBox(height: 10,),
+            /// Button to view restaurant menu
             InkWell(
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=> RestaurantMenu(
@@ -216,6 +234,8 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
               },
                 child: Widgets().rowTile(label: LabelConstants.viewMenu)),
             const SizedBox(height: 10,),
+
+            /// Container to display customer reviews
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -227,10 +247,12 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                 children: [
                   Text(LabelConstants.customerReview,style: Widgets.common18px600(),),
                   const SizedBox(height: 10,),
+                  /// Displaying  rating and number of reviews
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      /// Star rating
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -252,9 +274,11 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                               print(rating);
                             },
                           ),
+                          /// rating
                           Text("${restaurantItem.stars.toString()}/5", style: Widgets.common16px600Blue(),)
                         ],
                       ),
+                      /// Number of reviews
                       Text("${restaurantItem.noReviews.toString()} Reviews",
                           style:const  TextStyle(
                               fontSize: 16,
@@ -265,6 +289,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                     ],
                   ),
                   const SizedBox(height: 10,),
+                  /// Displaying progress bars for each star rating
                   Widgets().progressBarTile(
                     context:context,
                       starText: "5 Star",
@@ -299,10 +324,12 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                 ],
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.only(top: 20.0,right: 20.0),
               child: Center(child: Text(LabelConstants.reviews,style: Widgets.common28px700(),)),
             ),
+            /// CarouselSlider to display customer reviews
             restaurantItem.reviews!=null ?
             CarouselSlider.builder(
                 itemCount: restaurantItem.reviews?.length,
@@ -320,6 +347,7 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
                 })
                ):Container(),
             const SizedBox(height: 10,),
+            /// Dots indicator for review carousel
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: imgList.asMap().entries.map((entry) {
@@ -341,8 +369,10 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
             ),
             const SizedBox(height: 20),
             Center(child: Text(LabelConstants.relatedRestro,style: Widgets.common28px700(),)),
+            /// Displaying related restaurants
             RelatedRestaurants(categories:  restaurantItem.categories,name: restaurantItem.name??""),
             const SizedBox(height: 20),
+            /// Button to navigate to write review screen
             InkWell(
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=>RestaurantReview(

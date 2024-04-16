@@ -11,8 +11,6 @@ import 'package:restaurantrating/constants/label_constants.dart';
 import 'package:restaurantrating/models/restaurant_model.dart';
 import 'package:restaurantrating/screens/restaurtants/restaurant_item.dart';
 
-import '../../apis/services/blocs/applifecycleobserver/applifecycle_observer.dart';
-
 class NearMeRestaurant extends StatefulWidget {
   final int itemIndex;
   const NearMeRestaurant({super.key, required this.itemIndex});
@@ -23,23 +21,31 @@ class NearMeRestaurant extends StatefulWidget {
 
 class _NearMeRestaurantState extends State<NearMeRestaurant> with WidgetsBindingObserver {
 
+  /// Restaurant BLoC
   final RestaurantBloc restaurantBloc = RestaurantBloc();
+
+  /// GeoLocation BLoC
   final GeoLocationBloc geoLocationBloc = GeoLocationBloc(geoLocationRepository: GeoLocationRepository());
 
+  /// Stream subscription for location updates
 StreamSubscription<Position>? positionSubscription;
+
+/// Flag to check if BLoC is closed
   bool isBlocClosed = false;
 
 
   @override
   void initState() {
 
-    WidgetsBinding.instance.addObserver(this);
-    restaurantBloc.add(GetRestaurantList());
-    geoLocationBloc.add(LoadGeoLocation());
+    WidgetsBinding.instance.addObserver(this);  /// Add observer for app lifecycle changes
+    restaurantBloc.add(GetRestaurantList());  /// Trigger event to get restaurant list
+    geoLocationBloc.add(LoadGeoLocation());  /// Trigger event to load geo location
 
+    /// Delay before starting position subscription to ensure proper initialization
     Future.delayed(const Duration(seconds: 2),(){
       if(!isBlocClosed){
-      positionSubscription = Geolocator.getPositionStream().listen((position) {
+        /// Listen for position updates
+        positionSubscription = Geolocator.getPositionStream().listen((position) {
           geoLocationBloc.add(UpdateGeoLocation(position: position));
 
       });
@@ -52,24 +58,27 @@ StreamSubscription<Position>? positionSubscription;
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print(state);
     if (state == AppLifecycleState.resumed) {
+      /// Trigger event to load geo location when app is resumed
       BlocProvider.of<GeoLocationBloc>(context).add(LoadGeoLocation());
     }
   }
 
   @override
   dispose() {
-    positionSubscription?.cancel();
-    // Close blocs before disposing
+    positionSubscription?.cancel();  /// Cancel position subscription
+    /// Close blocs before disposing
     restaurantBloc.close();
     geoLocationBloc.close();
     isBlocClosed = true;
 
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);  /// Remove observer for app lifecycle changes
      super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    /// Widget to display list of restaurants
     return  SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -86,6 +95,7 @@ StreamSubscription<Position>? positionSubscription;
                       builder: (context, state){
                         if(state is RestaurantInitial){
                           debugPrint("state$state");
+                          /// Display loading indicator if initial state
                           return _buildLoading();
                         }
                         else if(state is RestaurantLoaded){
@@ -97,11 +107,14 @@ StreamSubscription<Position>? positionSubscription;
                                 builder: (context,stategeo) {
                                   if(stategeo is GeolocationLoading){
                                     debugPrint("state$stategeo");
+                                    /// Display loading indicator if geo location loading
                                     return _buildLoading();
                                   }
                                   else if(stategeo is GeoLocationLoaded){
                                     List<RestaurantListResponse> restData = [];
                                     debugPrint("state$stategeo");
+
+                                    /// Sort restaurant list based on selected index
                                     if(widget.itemIndex == 0){
                                       restData = sortRestroList(restaurantBloc.restData,stategeo.position.longitude,stategeo.position.latitude);
                                     }
@@ -111,6 +124,7 @@ StreamSubscription<Position>? positionSubscription;
                                     else {
                                       restData = restaurantBloc.restData;
                                     }
+                                    /// Display list view of restaurants
                                     return ListView.builder(
                                         scrollDirection: Axis.horizontal,
                                         itemCount: restData.length,
@@ -149,8 +163,10 @@ StreamSubscription<Position>? positionSubscription;
     );
   }
 
+  /// Widget to display loading indicator
   Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 
+  /// Function to sort restaurant list based on distance from user's location
   List<RestaurantListResponse> sortRestroList(List<RestaurantListResponse> restData, double longitude, double latitude) {
 
     restData.sort((a,b){
@@ -179,6 +195,7 @@ StreamSubscription<Position>? positionSubscription;
     return restData;
   }
 
+  /// Function to calculate distance between two points
   int calculateDistance({
     required double startLatitude,
     required double startLongitude,
@@ -187,14 +204,7 @@ StreamSubscription<Position>? positionSubscription;
   }) {
     var distance = Geolocator.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude);
 
-
-
-
-
-
     var distanceInKM = distance/1000;
-
-
     if(distanceInKM<1){
 
       return distance.toDouble().round();
@@ -206,6 +216,7 @@ StreamSubscription<Position>? positionSubscription;
 
   }
 
+  /// Function to sort restaurant list based on rating
   List<RestaurantListResponse> sortListAccordingRating(List<RestaurantListResponse> restData) {
     restData.sort((a,b){
 

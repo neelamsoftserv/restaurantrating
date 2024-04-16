@@ -36,6 +36,7 @@ class _RestaurantReviewState extends State<RestaurantReview> {
     return SafeArea(
      child: Scaffold(
        backgroundColor: ColorConstants.backgroundColor,
+       /// App bar with back button and title
        appBar: PreferredSize(
          preferredSize: Size(
              MediaQuery.of(context).size.width,
@@ -63,14 +64,17 @@ class _RestaurantReviewState extends State<RestaurantReview> {
        body: ListView(
          padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 0.0),
          children: [
+           /// Text introducing the feedback section
            Text(LabelConstants.weValueFeedback,style: Widgets.common34px700(),),
            const SizedBox(height: 10,),
-           Container(
+           /// Carousel to display restaurant item
+           SizedBox(
              height: MediaQuery.of(context).size.height *.25,
              child: CarouselItem(
                  restaurantItem:widget.restaurantItem),
            ),
            const SizedBox(height: 20,),
+           /// Container for rating selection
            Container(
              decoration: BoxDecoration(
                color: Colors.white,
@@ -79,8 +83,10 @@ class _RestaurantReviewState extends State<RestaurantReview> {
              padding: const EdgeInsets.all(10),
              child: Column(
                children: [
+                 /// Image and text to represent selected rating
                  rateImageWidget(image: ratingImage,imageText: ratingText),
                  const SizedBox(height: 10,),
+                 /// Rating bar to select rating
                  RatingBar.builder(
                    itemSize: 35.0,
                    initialRating: 0,
@@ -103,6 +109,7 @@ class _RestaurantReviewState extends State<RestaurantReview> {
              ),
            ),
            const SizedBox(height: 20,),
+           /// Text form field for entering review
            TextFormField(
              readOnly: false,
              focusNode: focusText,
@@ -135,6 +142,7 @@ class _RestaurantReviewState extends State<RestaurantReview> {
                      borderRadius: BorderRadius.circular(25.0))),
            ),
            const SizedBox(height: 10,),
+           /// Button to submit review
            InkWell(
              onTap: (){
                showModalBottomSheet(context: context, builder: (context){
@@ -184,18 +192,23 @@ class _RestaurantReviewState extends State<RestaurantReview> {
      ));
   }
 
+  /// Widget to display an image with accompanying text for a rating category
  Widget rateImageWidget({required String image,required String imageText}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center ,
       children: [
+        /// Display the image
         Image.asset(image,width: 100,height: 100,),
         const SizedBox(height: 10,),
+        /// Display the text below the image
         Text(imageText,style: Widgets.common16px400(),)
       ],
     );
  }
 
+  /// Method to calculate the rating text and corresponding image based on the numeric rating
   void calculateRating(double rating) {
+    /// Check the value of the rating and assign appropriate text and image
     if(rating == 1.0){
       ratingText = "Poor";
       ratingImage = ImageConstants.poorRating;
@@ -217,6 +230,7 @@ class _RestaurantReviewState extends State<RestaurantReview> {
       ratingImage = ImageConstants.superbRating;
     }
     else{
+      /// If the rating is not within the expected range, display a default image
       ratingImage = ImageConstants.rateExp;
       ratingText = LabelConstants.rateYourExperience;
     }

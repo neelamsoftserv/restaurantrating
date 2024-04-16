@@ -1,3 +1,6 @@
+/// SplashScreen widget, which displays a splash screen when the app starts
+
+
 import 'package:flutter/material.dart';
 import 'package:restaurantrating/constants/image_constants.dart';
 import 'package:restaurantrating/screens/homepage.dart';
@@ -13,7 +16,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+
+    /// Delay for 3 seconds before navigating to the home page
     Future.delayed(const Duration(seconds: 3),(){
+      /// Navigates to the HomePage and removes all other routes from the navigation stack
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)
           => const HomePage()
       ), (route) => false);
@@ -23,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
   
   @override
   Widget build(BuildContext context) {
+    /// Displaying an image as the splash screen
     return SafeArea(
         child: Scaffold(
           body: SizedBox(

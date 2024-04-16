@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:restaurantrating/constants/color_constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/image_constants.dart';
 import '../models/restaurant_model.dart';
@@ -190,7 +191,9 @@ class Widgets {
               Align(
                 alignment: Alignment.centerRight,
                 child: InkWell(
-                  onTap: (){},
+                  onTap: (){
+                    openMapWithAddress(location);
+                  },
                   child: const Text("View on Google Maps",
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -277,5 +280,17 @@ class Widgets {
         .toList()
         : restroList;
     return restData;
+  }
+
+  Future<void> openMapWithAddress(String address) async {
+    print(address);
+    final googleUrl = Uri.parse('https://www.google.com/maps/search/?api=1&query=$address');
+    print('googleUrl ${googleUrl}');
+
+    if (await canLaunchUrl(googleUrl)) {
+      await launchUrl(googleUrl);
+    } else {
+      throw 'Could not open the map.';
+    }
   }
 }

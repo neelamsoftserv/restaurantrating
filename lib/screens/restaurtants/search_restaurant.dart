@@ -5,7 +5,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_bloc.dart';
 import 'package:restaurantrating/common/widgets.dart';
 import 'package:restaurantrating/constants/color_constants.dart';
-import 'package:restaurantrating/models/restaurant_model.dart';
 import 'package:restaurantrating/screens/restaurtants/restaurant_details.dart';
 
 import '../../apis/services/blocs/restaurant_blocs/restaurant_bloc.dart';
@@ -27,57 +26,22 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
   ///search text editing controller
   TextEditingController searchController = TextEditingController();
 
-  List restaurantList = [
-    {
-      "name": "Fit Fresh Bites",
-      "image": ImageConstants.restroOne,
-      "rating": "4.3",
-      "distance":"5.2KM"
-    },
-    {
-      "name": "Fit Fresh Bites",
-      "image": ImageConstants.restroOne,
-      "rating": "4.3",
-      "distance":"5.2KM"
-    },
-    {
-      "name": "Fit Fresh Bites",
-      "image": ImageConstants.restroOne,
-      "rating": "4.3",
-      "distance":"5.2KM"
-    },
-    {
-      "name": "Fit Fresh Bites",
-      "image": ImageConstants.restroOne,
-      "rating": "4.3",
-      "distance":"5.2KM"
-    },
-    {
-      "name": "Fit Fresh Bites",
-      "image": ImageConstants.restroOne,
-      "rating": "4.3",
-      "distance":"5.2KM"
-    },
-    {
-      "name": "Fit Fresh Bites",
-      "image": ImageConstants.restroOne,
-      "rating": "4.3",
-      "distance":"5.2KM"
-    }
-  ];
-
+  /// Initialize RestaurantBloc to fetch restaurant data
   final RestaurantBloc restaurantBloc = RestaurantBloc();
+
   @override
   void initState() {
+    /// Add event to fetch restaurant data when the widget is initialized
     restaurantBloc.add(GetRestaurantList());
     super.initState();
   }
-
+  /// Variables to hold the user's current geolocation
   double? endLatitude;
   double? endLongitude;
 
   @override
   dispose() {
+    /// Close the RestaurantBloc when the widget is disposed
     restaurantBloc.close();
     super.dispose();
   }
@@ -87,6 +51,7 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: ColorConstants.backgroundColor,
+        /// App bar with a text input field for search
         appBar: PreferredSize(
           preferredSize: Size(
               MediaQuery.of(context).size.width,
@@ -131,6 +96,7 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                         width: .2,
                       ),
                       borderRadius: BorderRadius.circular(25.0))),
+              /// Triggered when user submits the search query
               onFieldSubmitted: (value){
                 final restData = Widgets().searchValue(value,restaurantBloc.restData);
                 if(restData.isNotEmpty){
@@ -141,7 +107,8 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                   restaurantBloc.add(GetRestaurantList());
                 }
               },
-             onChanged: (value){
+              /// Triggered when user changes the search query
+              onChanged: (value){
                 if(value.isEmpty){
                   if(restaurantBloc.isClosed){
 
@@ -152,12 +119,14 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
 
                 }
              },
+              /// Triggered when user taps outside the search field
               onTapOutside: (event){
                 searchFocus.unfocus();
               },
             ),
           ),
         ),
+        /// Body section displaying search results
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 20),
           child: searchController.text.isEmpty?
@@ -171,6 +140,7 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
               Expanded(
                 child: BlocProvider(
                   create: (_)=>restaurantBloc,
+                  /// Building the list of search results
                   child: BlocBuilder<RestaurantBloc,RestaurantState>(
                     builder: (context, state) {
                       if(state is RestaurantInitial){
@@ -178,6 +148,7 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                       }
                       else if (state is RestaurantLoaded){
                         return
+                          /// Custom grid view for displaying restaurant cards
                           GridView.custom(
                             semanticChildCount: restaurantBloc.restData.length,
                             gridDelegate: SliverStairedGridDelegate(
@@ -189,6 +160,7 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                                 StairedGridTile(0.5, 2 / 4),
                               ],
                             ),
+                            /// Building each restaurant card
                             childrenDelegate: SliverChildBuilderDelegate(
                                 childCount: restaurantBloc.restData.length,
                                     (context, index) {
@@ -201,6 +173,7 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                                           endLongitude: endLongitude??0.0
                                       )));
                                     },
+                                    /// Individual restaurant card with details
                                     child: Stack(
                                       alignment: Alignment.center,
                                       children: [
