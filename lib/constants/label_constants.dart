@@ -1,7 +1,7 @@
 class LabelConstants{
 
   static const String rateAndDiscover = "Rate & Discover Restaurants 🛎️";
-  static const String search = "Search";
+  static const String search = "Search by name,address & category";
   static const String nearMe = "Near Me";
   static const String topRated = "Top Rated";
   static const String trending = "Trending";
@@ -20,6 +20,5 @@ class LabelConstants{
   static const String reviewHint = "Amazing! what caught your attention?";
   static const String submit = "Submit";
   static const String seeMore = "See More";
-
   static const String dummyText = "Lorem ipsum dolor sit amet consectetur. Sit mollis. Em ipsum dolor sit amet consectetur. Sit mollis. Lorem ipsum dolor sit amet consectetur. Sit mollis. Em ipsum dolor sit amet consectetur. Sit mollis. Consectetur. Sit mollis. Em ipsum dolor sit amet consectetur. Sit mollis.";
 }

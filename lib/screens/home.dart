@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:restaurantrating/apis/services/blocs/applifecycleobserver/applifecycle_observer.dart';
 import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_bloc.dart';
 import 'package:restaurantrating/apis/services/repositories/geolocation/geolocation_repository.dart';
@@ -19,7 +20,7 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home>{
 
   ///to control the focus of search input field
   FocusNode searchFocus = FocusNode();
@@ -44,22 +45,6 @@ class _HomeState extends State<Home> {
 
   TabController? _tabController;
 
-  @override
-  void initState() {
-    // Registering the observer to listen to app lifecycle changes
-    WidgetsBinding.instance.addObserver(
-      AppLifecycleObserver(appStateBloc: GeoLocationBloc(geoLocationRepository:  GeoLocationRepository()))
-    );
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(
-        AppLifecycleObserver(appStateBloc: GeoLocationBloc(geoLocationRepository:  GeoLocationRepository()))
-    );
-    super.dispose();
-  }
 
   final RestaurantBloc restaurantBloc = RestaurantBloc();
   final GeoLocationBloc geoLocationBloc = GeoLocationBloc(geoLocationRepository: GeoLocationRepository());
@@ -163,13 +148,6 @@ class _HomeState extends State<Home> {
                           indicatorColor: ColorConstants.blueColor,
                           indicatorWeight: 2,
                           tabs: tabBarItems,
-                        onTap: (value){
-                           /* if(value == 0){
-                              restaurantBloc.add(GetRestaurantList());
-                              geoLocationBloc.add(LoadGeoLocation());
-                            }
-*/
-                        }
                       ),
                     ),
                     Expanded(

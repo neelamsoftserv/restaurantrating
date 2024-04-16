@@ -77,6 +77,12 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
   double? endLongitude;
 
   @override
+  dispose() {
+    restaurantBloc.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -137,9 +143,18 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
               },
              onChanged: (value){
                 if(value.isEmpty){
-                  restaurantBloc.add(GetRestaurantList());
+                  if(restaurantBloc.isClosed){
+
+                  }
+                  else{
+                    restaurantBloc.add(GetRestaurantList());
+                  }
+
                 }
-             }
+             },
+              onTapOutside: (event){
+                searchFocus.unfocus();
+              },
             ),
           ),
         ),
@@ -205,8 +220,11 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                                               const SizedBox(height: 50),
                                               Padding(
                                                 padding: const EdgeInsets.all(8.0),
-                                                child: FittedBox(
-                                                  child: Text(item.name.toString(),style: Widgets.common22px600(),textAlign: TextAlign.center,),
+                                                child: Text(item.name.toString(),style: const TextStyle(
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.black,overflow:  TextOverflow.ellipsis
+                                                ),textAlign: TextAlign.center,maxLines: 2,
                                                 ),
                                               ),
                                               Padding(

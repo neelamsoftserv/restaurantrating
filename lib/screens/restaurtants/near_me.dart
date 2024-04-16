@@ -11,6 +11,8 @@ import 'package:restaurantrating/constants/label_constants.dart';
 import 'package:restaurantrating/models/restaurant_model.dart';
 import 'package:restaurantrating/screens/restaurtants/restaurant_item.dart';
 
+import '../../apis/services/blocs/applifecycleobserver/applifecycle_observer.dart';
+
 class NearMeRestaurant extends StatefulWidget {
   final int itemIndex;
   const NearMeRestaurant({super.key, required this.itemIndex});
@@ -19,32 +21,52 @@ class NearMeRestaurant extends StatefulWidget {
   State<NearMeRestaurant> createState() => _NearMeRestaurantState();
 }
 
-class _NearMeRestaurantState extends State<NearMeRestaurant> {
+class _NearMeRestaurantState extends State<NearMeRestaurant> with WidgetsBindingObserver {
 
   final RestaurantBloc restaurantBloc = RestaurantBloc();
   final GeoLocationBloc geoLocationBloc = GeoLocationBloc(geoLocationRepository: GeoLocationRepository());
 
 StreamSubscription<Position>? positionSubscription;
+  bool isBlocClosed = false;
 
 
   @override
   void initState() {
+
+    WidgetsBinding.instance.addObserver(this);
     restaurantBloc.add(GetRestaurantList());
     geoLocationBloc.add(LoadGeoLocation());
-    Future.delayed(const Duration(seconds: 5),(){
+
+    Future.delayed(const Duration(seconds: 2),(){
+      if(!isBlocClosed){
       positionSubscription = Geolocator.getPositionStream().listen((position) {
-        geoLocationBloc.add(UpdateGeoLocation(position: position));
+          geoLocationBloc.add(UpdateGeoLocation(position: position));
+
       });
+      }
     });
     super.initState();
   }
 
   @override
-  dispose() {
-    positionSubscription?.cancel();
-     super.dispose();
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    if (state == AppLifecycleState.resumed) {
+      BlocProvider.of<GeoLocationBloc>(context).add(LoadGeoLocation());
+    }
   }
 
+  @override
+  dispose() {
+    positionSubscription?.cancel();
+    // Close blocs before disposing
+    restaurantBloc.close();
+    geoLocationBloc.close();
+    isBlocClosed = true;
+
+    WidgetsBinding.instance.removeObserver(this);
+     super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +108,9 @@ StreamSubscription<Position>? positionSubscription;
                                     else if(widget.itemIndex == 1){
                                       restData = sortListAccordingRating(restaurantBloc.restData);
                                     }
+                                    else {
+                                      restData = restaurantBloc.restData;
+                                    }
                                     return ListView.builder(
                                         scrollDirection: Axis.horizontal,
                                         itemCount: restData.length,
@@ -93,7 +118,7 @@ StreamSubscription<Position>? positionSubscription;
                                         itemBuilder: (BuildContext context, index){
                                           var item = restData[index];
                                           return RestaurantItem(
-                                              item:item
+                                              item:item,
                                           );
                                         });
                                   }
@@ -162,16 +187,13 @@ StreamSubscription<Position>? positionSubscription;
   }) {
     var distance = Geolocator.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude);
 
-    debugPrint('startLatitude $startLatitude');
-    debugPrint('startLongitude $startLongitude');
-    debugPrint('endLatitude $endLatitude');
-    debugPrint('endLongitude $endLongitude');
+
 
 
 
 
     var distanceInKM = distance/1000;
-    debugPrint('distanceInKM $distanceInKM');
+
 
     if(distanceInKM<1){
 

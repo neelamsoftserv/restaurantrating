@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class ImageConstants {
   static const String heart = "assets/images/heart.png";
@@ -34,4 +33,5 @@ class ImageConstants {
   static const String hotChocolate = "assets/images/hotchocolate.png";
   static const String saltedFries = "assets/images/saltedfries.png";
   static const String vegSandwich = "assets/images/vegsandwich.png";
+  static const String splashImage = "assets/images/splashimage.png";
 }

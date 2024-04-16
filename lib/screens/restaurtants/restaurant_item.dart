@@ -52,18 +52,22 @@ class _RestaurantItemState extends State<RestaurantItem> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Container(height: MediaQuery.of(context).size.height*.15,),
-                    Container(
-                        height: MediaQuery.of(context).size.height*.10,
-                        alignment: Alignment.center,
-                        child: Text(item.name.toString(),style: const TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                            overflow: TextOverflow.ellipsis
-                        ),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,)),
+                    Expanded(
+                      flex:2,
+                        child: Container(height: MediaQuery.of(context).size.height*.20,)),
+                    Expanded(
+                      child: Container(
+                          height: MediaQuery.of(context).size.height*.10,
+                          alignment: Alignment.center,
+                          child: Text(item.name.toString(),style: const TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black,
+                              overflow: TextOverflow.ellipsis
+                          ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,)),
+                    ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 0.0),
@@ -96,10 +100,10 @@ class _RestaurantItemState extends State<RestaurantItem> {
                                           const SizedBox(width: 5,),
                                           Text(
                                             Widgets().calculateDistance(
-                                              startLatitude: state.position.latitude,
-                                              startLongitude: state.position.longitude,
-                                              endLatitude: item.contact!.location![0],
-                                              endLongitude: item.contact!.location![1],
+                                              startLatitude: item.contact!.location![0],
+                                              startLongitude: item.contact!.location![1],
+                                              endLatitude: state.position.latitude,
+                                              endLongitude: state.position.longitude,
 
                                           ),style: Widgets.common22px600(),),
                                         ],

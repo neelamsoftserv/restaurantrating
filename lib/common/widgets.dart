@@ -239,34 +239,43 @@ class Widgets {
   }) {
     var distance = Geolocator.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude);
 
+    /*debugPrint('startLatitude $startLatitude');
+    debugPrint('startLongitude $startLongitude');
+    debugPrint('endLatitude $endLatitude');
+    debugPrint('endLongitude $endLongitude');*/
+
+
     var distanceInKM = distance/1000;
+   /* debugPrint('distanceInKM $distanceInKM');
+    debugPrint('distanceInMeter $distance');*/
 
     if(distanceInKM<1){
       return "${distance.toDouble().round().toString()}m";
     }
     else{
-      // debugPrint('distanceInKM item${distanceInKM.toDouble().round()}');
+
       return "${distanceInKM.toDouble().round().toString()}KM";
     }
 
   }
 
   List<RestaurantListResponse> searchValue(String value,restroList) {
-    // print("called");
     final restData = value.isNotEmpty ? restroList.where((element) =>
     (element.name != null &&
         element.name!.toLowerCase().startsWith(value.toLowerCase())) ||
         (element.name != null &&
             element.name!.toLowerCase().contains(value.toLowerCase())) ||
+        (element.address != null &&
+            element.address!.toLowerCase().startsWith(value.toLowerCase())) ||
+        (element.address != null &&
+            element.address!.toLowerCase().contains(value.toLowerCase())) ||
+
         (element.categories != null &&
             element.categories!.any((category) =>
             category != null &&
                 category.toLowerCase().contains(value.toLowerCase()))))
         .toList()
         : restroList;
-
-    // print("restData${restData.length}");
-
     return restData;
   }
 }

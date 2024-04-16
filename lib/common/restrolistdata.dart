@@ -1123,7 +1123,7 @@ class RestroData {
         "stars": 0,
         "categories": [
             "American",
-            "Pizza"
+            "Pizza","Vegetables"
         ],
         "no_reviews": "6584",
         "address": "Friedrichstraße 185-190, 10117 Berlin, Germany",
@@ -1237,7 +1237,7 @@ class RestroData {
         "categories": [
             "Donuts",
             "Cuban",
-            "Russian"
+            "Russian","Vegetables"
         ],
         "no_reviews": "1365",
         "address": "Brückenstraße 1A, 10179 Berlin, Germany",

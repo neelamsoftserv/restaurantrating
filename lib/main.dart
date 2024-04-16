@@ -6,6 +6,7 @@ import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_blo
 import 'package:restaurantrating/apis/services/repositories/geolocation/geolocation_repository.dart';
 import 'package:restaurantrating/constants/font_constant.dart';
 import 'package:restaurantrating/screens/homepage.dart';
+import 'package:restaurantrating/screens/splashscreen.dart';
 
 Future<void> main() async {
   runApp(const MyApp());
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
               colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
               useMaterial3: false,
             ),
-            home: const HomePage(),
+            home: const SplashScreen(),
           ),
         )
     );

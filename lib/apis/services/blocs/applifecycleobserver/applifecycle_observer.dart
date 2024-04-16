@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_bloc.dart';
+import 'package:restaurantrating/apis/services/blocs/restaurant_blocs/restaurant_bloc.dart';
 
 
 class AppLifecycleObserver extends WidgetsBindingObserver {
@@ -11,7 +12,8 @@ class AppLifecycleObserver extends WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print(state);
     if (state == AppLifecycleState.resumed) {
-     appStateBloc.add(LoadGeoLocation());
+      RestaurantBloc().add(GetRestaurantList());
+      appStateBloc.add(LoadGeoLocation());
     }
   }
 }

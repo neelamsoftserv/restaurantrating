@@ -151,7 +151,7 @@ class _RestaurantReviewState extends State<RestaurantReview> {
                        const SizedBox(height: 5,),
                        InkWell(
                          onTap: (){
-                           Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>HomePage()), (route) => false);
                          },
                          child: Container(
                            width: 150,

@@ -378,16 +378,18 @@ class _RestaurantDetailState extends State<RestaurantDetail> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(ImageConstants.customerPiceFemale,width: 24,height: 24,),
-                  const SizedBox(width: 5,),
-                  Text(reviews.name.toString(),style: Widgets.common16px400(),),
-                ],
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(ImageConstants.customerPiceFemale,width: 24,height: 24,),
+                    const SizedBox(width: 5,),
+                    Expanded(child: Text(reviews.name.toString(),style: Widgets.common16px400(),)),
+                  ],
+                ),
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
