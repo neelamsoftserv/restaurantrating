@@ -24,37 +24,11 @@ class _RelatedRestaurantsState extends State<RelatedRestaurants> {
   final RestaurantBloc restaurantBloc = RestaurantBloc();
   final RestaurantBloc restaurantBlocRelated = RestaurantBloc();
 
-
-
   @override
   void initState() {
-
     restaurantBloc.add(GetRestaurantList());
-    restaurantBlocRelated.add(GetRestaurantList());
-    //restaurantList = filterRestaurantAccCate(widget.categories,restaurantBloc.restData);
-
-
-
     super.initState();
   }
-
-
-  List<RestaurantListResponse> getRelatedRest(){
-    List<RestaurantListResponse> restData = [];
-    for(var item in restaurantBloc.restData){
-      if(widget.name.toLowerCase()==item.name.toString().toLowerCase()){
-
-      }
-      else {
-        restData.add(item);
-      }
-
-    }
-    print("Called Case 2 ${restaurantBlocRelated.restData.length}");
-
-    return restData;
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,24 +44,17 @@ class _RelatedRestaurantsState extends State<RelatedRestaurants> {
                   return _buildLoading();
                 }
                 else if(state is RestaurantLoaded){
-                  List<RestaurantListResponse> restData = [];
-                  //print("length${restaurantBlocRelated.restData.length}");
-                  if(restaurantBlocRelated.restData.isNotEmpty){
-                    print("Called Case 1 ${restaurantBlocRelated.restData.length}");
-                     restData = getRelatedRest();
-                  }else{
-                    print("Called Case ===> ${restaurantBlocRelated.restData.length}");
-                  }
+                 restaurantList = filterRestaurantAccCate(widget.categories,restaurantBloc.restData);
                   return BlocBuilder<GeoLocationBloc,GeolocationState>(
                     builder: (context,geoState) {
                       if(geoState is GeoLocationLoaded){
-                        return
+                        return restaurantList.isNotEmpty?
                           ListView.builder(
                               scrollDirection: Axis.horizontal,
-                              itemCount: restData.length,
+                              itemCount: restaurantList.length,
                               shrinkWrap: true,
                               itemBuilder: (BuildContext context, index){
-                                var item = restData[index];
+                                var item = restaurantList[index];
                                 return InkWell(
                                   onTap: (){
                                     Navigator.push(context, MaterialPageRoute(builder: (context)=>
@@ -144,7 +111,10 @@ class _RelatedRestaurantsState extends State<RelatedRestaurants> {
                                     ),
                                   ),
                                 );
-                              });
+                              }):
+                         Center(
+                          child: Text("No Related Restaurants",style: Widgets.common28px700(),),
+                        );
                       }
                       else if(geoState is GeolocationLoading){
                         return _buildLoading();
@@ -168,25 +138,21 @@ class _RelatedRestaurantsState extends State<RelatedRestaurants> {
   }
 
   List<RestaurantListResponse> filterRestaurantAccCate(List<String>? categories, List<RestaurantListResponse> restroList) {
-    print("called ${restroList.length}");
-    bool found = false;
+    List<RestaurantListResponse> filteredList = [];
     if(categories!=null && restroList.isNotEmpty){
       for(var restro in restroList){
-        for(var resCat in restro.categories??[]){
-          for(var item in categories){
-            if(item == resCat){
-              found = true;
-              print("called");
-              restaurantList.add(restro);
+        if(restro.name.toString().toLowerCase() != widget.name.toString().toLowerCase()){
+          for(var resCat in restro.categories??[]){
+            if(categories.contains(resCat)){
+              filteredList.add(restro);
+              break;
             }
           }
         }
+
       }
     }
-    if(restaurantList.isNotEmpty){
-      restaurantBloc.restData = restaurantList;
-    }
-    return restaurantList;
+    return filteredList;
   }
 
   Widget _buildLoading() => const Center(child: CircularProgressIndicator());

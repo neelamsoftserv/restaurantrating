@@ -277,14 +277,7 @@ class Widgets {
     var distance = Geolocator.distanceBetween(
         startLatitude, startLongitude, endLatitude, endLongitude);
 
-    /*debugPrint('startLatitude $startLatitude');
-    debugPrint('startLongitude $startLongitude');
-    debugPrint('endLatitude $endLatitude');
-    debugPrint('endLongitude $endLongitude');*/
-
     var distanceInKM = distance / 1000;
-    /* debugPrint('distanceInKM $distanceInKM');
-    debugPrint('distanceInMeter $distance');*/
 
     if (distanceInKM < 1) {
       return "${distance.toDouble().round().toString()}m";
@@ -334,4 +327,8 @@ class Widgets {
       throw 'Could not open the map.';
     }
   }
+
+  Widget buildLoading() => const Center(child: CircularProgressIndicator());
+
+
 }

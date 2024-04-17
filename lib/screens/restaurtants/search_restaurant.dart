@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:restaurantrating/apis/services/blocs/geolocation/geolocation_bloc.dart';
 import 'package:restaurantrating/common/widgets.dart';
 import 'package:restaurantrating/constants/color_constants.dart';
@@ -144,7 +143,7 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                   child: BlocBuilder<RestaurantBloc,RestaurantState>(
                     builder: (context, state) {
                       if(state is RestaurantInitial){
-                        return _buildLoading();
+                        return Widgets().buildLoading();
                       }
                       else if (state is RestaurantLoaded){
                         return
@@ -231,7 +230,7 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
                                                                       }
                                                                       else if (state is GeoLocationLoaded){
                                                                         return FittedBox(
-                                                                          child:Text(calculateDistance(
+                                                                          child:Text(Widgets().calculateDistance(
                                                                               startLatitude: item.contact!.location![0],
                                                                               startLongitude: item.contact!.location![1],
                                                                               endLatitude: state.position.latitude,
@@ -288,26 +287,8 @@ class _SearchRestaurantState extends State<SearchRestaurant> {
     );
   }
 
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
 
-  String calculateDistance({
-    required double startLatitude,
-    required double startLongitude,
-    required double endLatitude,
-    required  double endLongitude
-  }) {
-    var distance = Geolocator.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude);
 
-    var distanceInKM = distance/1000;
-
-    if(distanceInKM<1){
-      return "${distance.toDouble().round().toString()}m";
-    }
-    else{
-      return "${distanceInKM.toDouble().round().toString()}KM";
-    }
-
-  }
 
 
 }

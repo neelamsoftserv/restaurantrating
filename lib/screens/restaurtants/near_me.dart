@@ -96,7 +96,7 @@ StreamSubscription<Position>? positionSubscription;
                         if(state is RestaurantInitial){
                           debugPrint("state$state");
                           /// Display loading indicator if initial state
-                          return _buildLoading();
+                          return Widgets().buildLoading();
                         }
                         else if(state is RestaurantLoaded){
                           debugPrint("state$state");
@@ -108,7 +108,7 @@ StreamSubscription<Position>? positionSubscription;
                                   if(stategeo is GeolocationLoading){
                                     debugPrint("state$stategeo");
                                     /// Display loading indicator if geo location loading
-                                    return _buildLoading();
+                                    return Widgets().buildLoading();
                                   }
                                   else if(stategeo is GeoLocationLoaded){
                                     List<RestaurantListResponse> restData = [];
@@ -163,9 +163,6 @@ StreamSubscription<Position>? positionSubscription;
     );
   }
 
-  /// Widget to display loading indicator
-  Widget _buildLoading() => const Center(child: CircularProgressIndicator());
-
   /// Function to sort restaurant list based on distance from user's location
   List<RestaurantListResponse> sortRestroList(List<RestaurantListResponse> restData, double longitude, double latitude) {
 
@@ -187,11 +184,8 @@ StreamSubscription<Position>? positionSubscription;
           startLongitude: startLongitudeB,
           endLatitude: latitude,
           endLongitude: longitude);
-
       return distanceA.compareTo(distanceB);
-
     });
-
     return restData;
   }
 
